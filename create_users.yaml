@@ -1,0 +1,18 @@
+- hosts: web
+  become: yes
+  tasks:
+        - name: add vars
+          include_vars: 
+                vars/pub_key.yaml  
+        - name: add user user1 
+          ansible.builtin.user:
+                        name: user1
+                        comment: try user1
+                        
+        - name: copy key
+          ansible.builtin.copy:
+                 content: "{{ pub_key }}"
+                 dest: /home/user1/pub_key
+        - name: install postfix
+          apt: pkg=apache2 state=present update_cache=true
+          tags: postfix 
